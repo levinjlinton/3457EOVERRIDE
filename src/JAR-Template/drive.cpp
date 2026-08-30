@@ -33,6 +33,7 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
   wheel_diameter(wheel_diameter),
   wheel_ratio(wheel_ratio),
   gyro_scale(gyro_scale),
+  
   drive_in_to_deg_ratio(wheel_ratio/360.0*M_PI*wheel_diameter),
   ForwardTracker_center_distance(ForwardTracker_center_distance),
   ForwardTracker_diameter(ForwardTracker_diameter),
@@ -43,6 +44,7 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
   drive_setup(drive_setup),
   DriveL(DriveL),
   DriveR(DriveR),
+  
   Gyro(inertial(gyro_port)),
   DriveLF(abs(DriveLF_port), is_reversed(DriveLF_port)),
   DriveRF(abs(DriveRF_port), is_reversed(DriveRF_port)),
@@ -257,6 +259,7 @@ void Drive::turn_to_angle(float angle){
 }
 
 void Drive::turn_to_angle(float angle, float turn_max_voltage){
+  
   turn_to_angle(angle, turn_max_voltage, turn_settle_error, turn_settle_time, turn_timeout, turn_kp, turn_ki, turn_kd, turn_starti);
 }
 
@@ -699,23 +702,24 @@ void Drive::control_arcade(){
 
 //DRIFTING IS AWESOME
 //DRIFTING IS AWESOME
-void Drive::control_drifting(){
-  auto Controller1 = controller(primary);
-  double throttle = Controller1.Axis3.position(vex::percent);
-  double turn = Controller1.Axis1.position(vex::percent);
-  double curve_throttle = (pow(throttle, 3) / 10000);
-  double curve_turn = (pow(turn, 3) / 10000);
-  double adjusted_turn = curve_turn * (1.0 - (fabs(curve_throttle) / 100));
-  double left_power = curve_throttle + adjusted_turn;
-  double right_power = curve_throttle - adjusted_turn;
-  left_power = fmax(-100.0, fmin(100.0, left_power));
-  right_power = fmax(-100.0, fmin(100.0, right_power));
-  //Note to self: Replace with motor names later, remember, THESE ARE PLACEHOLDERS
-  LeftFront.spin(vex::fwd, left_power, vex::percentUnits::pct);
-  LeftBack.spin(vex::fwd, left_power, vex::percentUnits::pct);
-  RightFront.spin(vex::fwd, right_power, vex::percentUnits::pct);
-  RightBack.spin(vex::fwd, right_power, vex::percentUnits::pct);
-}
+// void Drive::control_drifting(){
+//   auto Controller1 = controller(primary);
+//   double throttle = Controller1.Axis3.position(vex::percent);
+//   double turn = Controller1.Axis1.position(vex::percent);
+//   double curve_throttle = (pow(throttle, 3) / 10000);
+//   double curve_turn = (pow(turn, 3) / 10000);
+//   double adjusted_turn = curve_turn * (1.0 - (fabs(curve_throttle) / 100));
+  
+//   double left_power = curve_throttle + adjusted_turn;
+//   double right_power = curve_throttle - adjusted_turn;
+//   left_power = fmax(-100.0, fmin(100.0, left_power));
+//   right_power = fmax(-100.0, fmin(100.0, right_power));
+//   //Note to self: Replace with motor names later, remember, THESE ARE PLACEHOLDERS
+//   LeftFront.spin(vex::fwd, left_power, vex::percentUnits::pct);
+//   LeftBack.spin(vex::fwd, left_power, vex::percentUnits::pct);
+//   RightFront.spin(vex::fwd, right_power, vex::percentUnits::pct);
+//   RightBack.spin(vex::fwd, right_power, vex::percentUnits::pct);
+// }
 
 
 /**

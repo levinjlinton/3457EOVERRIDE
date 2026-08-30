@@ -21,15 +21,15 @@ void align_to_tag(float targetID) {
       if (id != targetID) { wait(20, msec); continue; }
 
       if (cx < 140) {
-        LeftFront.spin(vex::directionType::fwd, -6, volt);
-        LeftBack.spin(vex::directionType::fwd, -6, volt);
-        RightFront.spin(vex::directionType::fwd,  6, volt);
-        RightBack.spin(vex::directionType::fwd,  6, volt);
+        LeftFront.spin(vex::directionType::fwd, -9, volt);
+        LeftBack.spin(vex::directionType::fwd, -9, volt);
+        RightFront.spin(vex::directionType::fwd, 9, volt);
+        RightBack.spin(vex::directionType::fwd, 9, volt);
       } else if (cx > 180) {
-        LeftFront.spin(vex::directionType::fwd,  6, volt);
-        LeftBack.spin(vex::directionType::fwd,  6, volt);
-        RightFront.spin(vex::directionType::fwd, -6, volt);
-        RightBack.spin(vex::directionType::fwd, -6, volt);
+        LeftFront.spin(vex::directionType::fwd, 9, volt);
+        LeftBack.spin(vex::directionType::fwd, 9, volt);
+        RightFront.spin(vex::directionType::fwd, -9, volt);
+        RightBack.spin(vex::directionType::fwd, -9, volt);
       } else {
         LeftFront.stop();
         LeftBack.stop();

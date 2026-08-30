@@ -122,48 +122,7 @@ void pre_auton() {
   vexcodeInit();
   default_constants();
 
-  while(!auto_started){
-    Brain.Screen.clearScreen();
-    Brain.Screen.printAt(5, 20, "JAR Template v1.2.0");
-    Brain.Screen.printAt(5, 40, "Battery Percentage:");
-    Brain.Screen.printAt(5, 60, "%d", Brain.Battery.capacity());
-    Brain.Screen.printAt(5, 80, "Chassis Heading Reading:");
-    Brain.Screen.printAt(5, 100, "%f", chassis.get_absolute_heading());
-    Brain.Screen.printAt(5, 120, "Selected Auton:");
-    switch(current_auton_selection){
-      case 0:
-        Brain.Screen.printAt(5, 140, "Auton 1");
-        break;
-      case 1:
-        Brain.Screen.printAt(5, 140, "Auton 2");
-        break;
-      case 2:
-        Brain.Screen.printAt(5, 140, "Auton 3");
-        break;
-      case 3:
-        Brain.Screen.printAt(5, 140, "Auton 4");
-        break;
-      case 4:
-        Brain.Screen.printAt(5, 140, "Auton 5");
-        break;
-      case 5:
-        Brain.Screen.printAt(5, 140, "Auton 6");
-        break;
-      case 6:
-        Brain.Screen.printAt(5, 140, "Auton 7");
-        break;
-      case 7:
-        Brain.Screen.printAt(5, 140, "Auton 8");
-        break;
-    }
-    if(Brain.Screen.pressing()){
-      while(Brain.Screen.pressing()) {}
-      current_auton_selection ++;
-    } else if (current_auton_selection == 8){
-      current_auton_selection = 0;
-    }
-    task::sleep(7);
-  }
+  liftRot.setPosition(0, deg);
 }
 
 /**
@@ -192,36 +151,90 @@ void usercontrol(void) {
   // User control code here, inside the loop
   // once you get motors, set stopping to whatever is necesarry(coast, brake, or hold)
   while (1) {
-    LeftLift.setStopping(hold); 
-    RightLift.setStopping(hold);\
+    // LeftLift.setStopping(hold); 
+    // RightLift.setStopping(hold);
+
+    //tuning motors:
+    Claw.setPosition(0, degrees);
+    Claw.setStopping(hold);
+    Claw.setMaxTorque(100, pct);
+    Claw.setVelocity(100, pct);
+    chassis.control_arcade();
+    Lift.setStopping(brake);
+    Lift.setMaxTorque(100, pct);
+    Lift.setVelocity(100, pct);
     LeftFront.setStopping(coast);
     RightFront.setStopping(coast);
     LeftBack.setStopping(hold);
     RightBack.setStopping(hold);
+    LeftFront.setVelocity(100, pct);
+    RightFront.setVelocity(100, pct);
+    LeftBack.setVelocity(100, pct);
+    RightBack.setVelocity(100, pct);
+    LeftFront.setMaxTorque(100, pct);
+    RightFront.setMaxTorque(100, pct);
+    LeftBack.setMaxTorque(100, pct);
+    RightBack.setMaxTorque(100, pct);
+
     chassis.control_arcade();
-    if (Controller.ButtonY.pressing())
-    {
-      drifting_mode = !drifting_mode;
-      Controller.rumble("-..");
-    } 
-    if (drifting_mode)
-    {
-      chassis.control_drifting();
-    } else {
-      chassis.control_arcade();
+    // if (Controller.ButtonY.pressing())
+    // {
+    //   drifting_mode = !drifting_mode;
+    //   Controller.rumble("-..");
+    // } 
+    // if (drifting_mode)
+    // {
+    //   chassis.control_drifting();
+    // } else {
+    //   chassis.control_arcade();
+    // }
+    if (Controller.ButtonX.pressing()){
+      ClawToggled = !ClawToggled;
     }
-      } else if (Controller.ButtonR2.pressing())
-    {
-      LeftLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-      RightLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-    } else {
-      LeftLift.stop(hold);
-      RightLift.stop(hold);
-    } 
-    wait(2, msec);// Sleep the task for a short amount of time to prevent wasted resources.
+    if (Controller.ButtonL2.pressing()){
+      Lift.spin(reverse, 100, pct);
+    } else if (Controller.ButtonR2.pressing()){
+      Lift.spin(forward, 100, pct);
+    } else{
+      Lift.stop(brake);
+    }
+    
+    if (!ClawToggled){
+      Claw.spinToPosition(180, degrees);
+    } else{
+      Claw.spinToPosition(0, degrees);
+    }
+    // if (Controller.ButtonR2.pressing()) {
+    //     usingLiftTarget = false;
+    //     LeftLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+    //     RightLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+    //   } else {
+    //     if (!usingLiftTarget) {
+    //       LeftLift.stop(hold);
+    //       RightLift.stop(hold);
+    //     }
+    //   }
+    
+    // // Set lift target.
+    // Controller.ButtonA.pressed([] {
+    //   usingLiftTarget = true;
+    //   target = A;
+    // });
+
+    // Controller.ButtonB.pressed([] {
+    //   usingLiftTarget = true;
+    //   target = B;
+    // });
+
+    // // Compute PID.
+    // if (usingLiftTarget){
+    //   double error = target - liftRot.position(deg);
+    //   double power = LiftPID.compute(error);
+    //   Lift.spin(forward, power, percent);
+    // }
+    wait(10, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
   }
 }
-
 //
 // Main will set up the competition functions and callbacks.
 //

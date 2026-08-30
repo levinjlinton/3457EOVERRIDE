@@ -1,3 +1,5 @@
+#include "JAR-Template/PID.h"
+
 using namespace vex;
 
 extern brain Brain;
@@ -15,5 +17,16 @@ extern motor RightFront;
 extern motor RightBack;
 extern motor LeftLift;
 extern motor RightLift;
+extern motor_group Lift;
+extern PID LiftPID;
+extern motor Claw;
+extern double target;
+extern bool usingLiftTarget;
+extern bool ClawToggled;
+extern rotation liftRot;
+
+extern double A;
+extern double B;
+extern double C;
 
 void  vexcodeInit( void );
