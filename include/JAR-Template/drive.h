@@ -3,7 +3,7 @@
 
 enum drive_setup {ZERO_TRACKER_NO_ODOM, ZERO_TRACKER_ODOM, TANK_ONE_FORWARD_ENCODER, TANK_ONE_FORWARD_ROTATION, 
 TANK_ONE_SIDEWAYS_ENCODER, TANK_ONE_SIDEWAYS_ROTATION, TANK_TWO_ENCODER, TANK_TWO_ROTATION, 
-HOLONOMIC_TWO_ENCODER, HOLONOMIC_TWO_ROTATION, OVERRIDE_APRIL_TAGS};
+HOLONOMIC_TWO_ENCODER, HOLONOMIC_TWO_ROTATION};
 
 /**
  * Drive class supporting tank and holo drive, with or without odom.
@@ -150,7 +150,6 @@ public:
   void holonomic_drive_to_pose(float X_position, float Y_position, float angle, float drive_max_voltage, float heading_max_voltage, float drive_settle_error, float drive_settle_time, float drive_timeout, float drive_kp, float drive_ki, float drive_kd, float drive_starti, float heading_kp, float heading_ki, float heading_kd, float heading_starti);
 
   void control_arcade();
-  void control_drifting();
   void control_tank();
   void control_holonomic();
 };

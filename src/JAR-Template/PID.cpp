@@ -47,7 +47,6 @@ float settle_error, float settle_time, float timeout) :
   settle_error(settle_error),
   settle_time(settle_time),
   timeout(timeout)
-  
 {};
 
 /**
@@ -88,6 +87,7 @@ float settle_error, float settle_time, float timeout, float update_period) :
  * 
  * @param error Difference in desired and current position.
  * @return Output power.
+ */
 
 float PID::compute(float error){
   if (fabs(error) < starti){
@@ -112,6 +112,8 @@ float PID::compute(float error){
 
   return output;
 }
+
+/**
  * Computes whether or not the movement has settled.
  * The robot is considered settled when error is less than settle_error 
  * for a duration of settle_time, or if the function has gone on for 

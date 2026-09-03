@@ -33,7 +33,6 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
   wheel_diameter(wheel_diameter),
   wheel_ratio(wheel_ratio),
   gyro_scale(gyro_scale),
-  
   drive_in_to_deg_ratio(wheel_ratio/360.0*M_PI*wheel_diameter),
   ForwardTracker_center_distance(ForwardTracker_center_distance),
   ForwardTracker_diameter(ForwardTracker_diameter),
@@ -44,7 +43,6 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
   drive_setup(drive_setup),
   DriveL(DriveL),
   DriveR(DriveR),
-  
   Gyro(inertial(gyro_port)),
   DriveLF(abs(DriveLF_port), is_reversed(DriveLF_port)),
   DriveRF(abs(DriveRF_port), is_reversed(DriveRF_port)),
@@ -259,7 +257,6 @@ void Drive::turn_to_angle(float angle){
 }
 
 void Drive::turn_to_angle(float angle, float turn_max_voltage){
-  
   turn_to_angle(angle, turn_max_voltage, turn_settle_error, turn_settle_time, turn_timeout, turn_kp, turn_ki, turn_kd, turn_starti);
 }
 
@@ -688,39 +685,42 @@ void Drive::holonomic_drive_to_pose(float X_position, float Y_position, float an
 
 /**
  * Controls a chassis with left stick throttle and right stick turning.
- * Default deadband is 2.
+ * Default deadband is 5.
  */
 
 void Drive::control_arcade(){
-  auto ctl = controller(primary);
-  float throttle = deadband(ctl.Axis3.value(), 2);
-  float turn = deadband(ctl.Axis1.value(), 2);
-  DriveL.spin(fwd, to_volt(throttle+turn), volt);
-  DriveR.spin(fwd, to_volt(throttle-turn), volt);
+  float throttle = deadband(controller(primary).Axis3.value(), 5);
+  float turn = deadband(controller(primary).Axis1.value(), 5);
+  DriveL.spin(fwd, to_volt(-throttle-turn), volt);
+  DriveR.spin(fwd, to_volt(-throttle+turn), volt);
 }
 
+/**
+ * Controls a chassis with left stick throttle and strafe, and right stick turning.
+ * Default deadband is 5.
+ */
 
-//DRIFTING IS AWESOME
-//DRIFTING IS AWESOME
-// void Drive::control_drifting(){
-//   auto Controller1 = controller(primary);
-//   double throttle = Controller1.Axis3.position(vex::percent);
-//   double turn = Controller1.Axis1.position(vex::percent);
-//   double curve_throttle = (pow(throttle, 3) / 10000);
-//   double curve_turn = (pow(turn, 3) / 10000);
-//   double adjusted_turn = curve_turn * (1.0 - (fabs(curve_throttle) / 100));
-  
-//   double left_power = curve_throttle + adjusted_turn;
-//   double right_power = curve_throttle - adjusted_turn;
-//   left_power = fmax(-100.0, fmin(100.0, left_power));
-//   right_power = fmax(-100.0, fmin(100.0, right_power));
-//   //Note to self: Replace with motor names later, remember, THESE ARE PLACEHOLDERS
-//   LeftFront.spin(vex::fwd, left_power, vex::percentUnits::pct);
-//   LeftBack.spin(vex::fwd, left_power, vex::percentUnits::pct);
-//   RightFront.spin(vex::fwd, right_power, vex::percentUnits::pct);
-//   RightBack.spin(vex::fwd, right_power, vex::percentUnits::pct);
-// }
+void Drive::control_holonomic(){
+  float throttle = deadband(controller(primary).Axis3.value(), 5);
+  float turn = deadband(controller(primary).Axis1.value(), 5);
+  float strafe = deadband(controller(primary).Axis4.value(), 5);
+  DriveLF.spin(fwd, to_volt(throttle+turn+strafe), volt);
+  DriveRF.spin(fwd, to_volt(throttle-turn-strafe), volt);
+  DriveLB.spin(fwd, to_volt(throttle+turn-strafe), volt);
+  DriveRB.spin(fwd, to_volt(throttle-turn+strafe), volt);
+}
 
+/**
+ * Controls a chassis with left stick left drive and right stick right drive.
+ * Default deadband is 5.
+ */
+
+void Drive::control_tank(){
+  float leftthrottle = deadband(controller(primary).Axis3.value(), 5);
+  float rightthrottle = deadband(controller(primary).Axis2.value(), 5);
+  DriveL.spin(fwd, to_volt(leftthrottle), volt);
+  DriveR.spin(fwd, to_volt(rightthrottle), volt);
+}
 
 /**
  * Tracking task to run in the background.

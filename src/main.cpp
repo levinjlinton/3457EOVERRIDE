@@ -121,8 +121,21 @@ void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   default_constants();
-
+  //tuning motors
+  Claw.setPosition(0, deg);
   liftRot.setPosition(0, deg);
+  Claw.setStopping(hold);
+  Claw.setMaxTorque(100, pct);
+  Claw.setVelocity(100, pct);
+  Lift.setStopping(brake);
+  Lift.setMaxTorque(100, pct);
+  Lift.setVelocity(100, pct);
+  LeftFront.setStopping(coast);
+  RightFront.setStopping(coast);
+  LeftBack.setStopping(hold);
+  RightBack.setStopping(hold);
+  dihtrain.setVelocity(100, pct);
+  dihtrain.setMaxTorque(100, pct);
 }
 
 /**
@@ -154,21 +167,6 @@ void usercontrol(void) {
     // LeftLift.setStopping(hold); 
     // RightLift.setStopping(hold);
 
-    //tuning motors:
-    Claw.setPosition(0, degrees);
-    Claw.setStopping(hold);
-    Claw.setMaxTorque(100, pct);
-    Claw.setVelocity(100, pct);
-    chassis.control_arcade();
-    Lift.setStopping(brake);
-    Lift.setMaxTorque(100, pct);
-    Lift.setVelocity(100, pct);
-    LeftFront.setStopping(coast);
-    RightFront.setStopping(coast);
-    LeftBack.setStopping(hold);
-    RightBack.setStopping(hold);
-    dihtrain.setvelocity(100, pct);
-    dihtrain.setMaxTorque(100, pct);
     chassis.control_arcade();
     // if (Controller.ButtonY.pressing())
     // {
@@ -181,57 +179,56 @@ void usercontrol(void) {
     // } else {
     //   chassis.control_arcade();
     // }
-    if (Controller.ButtonX.pressing()){
-      ClawToggled = !ClawToggled;
-    }
-    if (Controller.ButtonL2.pressing()){
-      Lift.spin(reverse, 100, pct);
-    } else if (Controller.ButtonR2.pressing()){
-      Lift.spin(forward, 100, pct);
-    } else{
-      Lift.stop(hold);
-    }
-    
-    if (!ClawToggled){
-      Claw.spinToPosition(180, degrees);
-    } else{
-      Claw.spinToPosition(0, degrees);
-    }
-    // if (Controller.ButtonR2.pressing()) {
-    //     usingLiftTarget = false;
-    //     LeftLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-    //     RightLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-    //   } else {
-    //     if (!usingLiftTarget) {
-    //       LeftLift.stop(hold);
-    //       RightLift.stop(hold);
-    //     }
-    //   }
-    
-    // // Set lift target.
-    // Controller.ButtonA.pressed([] {
-    //   usingLiftTarget = true;
-    //   target = A;
-    // });
-
-    // Controller.ButtonB.pressed([] {
-    //   usingLiftTarget = true;
-    //   target = B;
-    // });
-
-    // // Compute PID.
-    // if (usingLiftTarget){
-    //   double error = target - liftRot.position(deg);
-    //   double power = LiftPID.compute(error);
-    //   Lift.spin(forward, power, percent);
+    // if (Controller.ButtonX.pressing()){
+    //   ClawToggled = !ClawToggled;
     // }
-    if (controller.ButtonA.pressing()) {
-      Lift.spinFor(forward, 1, sec, 100, pct);
-      Lift.stop(hold);
-      dihtrain.spinFor(forward, 1, sec, 100, pct);
-      dihtrain.spinFor(reverse, 1, sec, 100, pct);
-      return;
+    // if (Controller.ButtonL2.pressing()){
+    //   Lift.spin(reverse, 100, pct);
+    // }
+    // if (Controller.ButtonR2.pressing()){
+    //   Lift.spin(forward, 100, pct);
+    // }          
+    if (Controller.ButtonUp.pressing()){
+      Claw.spin(forward, 100, pct);
     }
+    if (Controller.ButtonDown.pressing()){
+      Claw.spin(reverse, 100, pct);
+    }
+    if (Controller.ButtonR2.pressing()) {
+        usingLiftTarget = false;
+        LeftLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+        RightLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+      } else {
+        if (!usingLiftTarget) {
+          LeftLift.stop(hold);
+          RightLift.stop(hold);
+        }
+      }
+    
+    // Set lift target.
+    Controller.ButtonA.pressed([] {
+      usingLiftTarget = true;
+      target = A;
+    });
+
+    Controller.ButtonB.pressed([] {
+      usingLiftTarget = true;
+      target = B;
+    });
+
+    // Compute PID.
+    if (usingLiftTarget){
+      double error = target - liftRot.position(deg);
+      double power = LiftPID.compute(error);
+      Lift.spin(forward, power, percent);
+    }
+    // if (controller.ButtonA.pressing()) {
+    //   Lift.spinFor(forward, 1, sec, 100, pct);
+    //   Lift.stop(hold);
+    //   dihtrain.spinFor(forward, 1, sec, 100, pct);
+    //   dihtrain.spinFor(reverse, 1, sec, 100, pct);
+    //   return;
+    // }
     wait(7, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
   }
 }

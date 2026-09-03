@@ -24,7 +24,7 @@ extern double target;
 extern bool usingLiftTarget;
 extern bool ClawToggled;
 extern rotation liftRot;
-
+extern motor_group dihtrain;
 extern double A;
 extern double B;
 extern double C;
