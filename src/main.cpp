@@ -45,13 +45,13 @@ ZERO_TRACKER_NO_ODOM,
 //You will input whatever motor names you chose when you configured your robot using the sidebar configurer, they don't have to be "Motor1" and "Motor2".
 
 //Left Motors:
-motor_group(),
+motor_group(LeftFront, LeftBack),
 
 //Right Motors:
-motor_group(),
+motor_group(RightFront, RightBack),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT1,
+PORT5,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 3.25,
@@ -167,14 +167,8 @@ void usercontrol(void) {
     RightFront.setStopping(coast);
     LeftBack.setStopping(hold);
     RightBack.setStopping(hold);
-    LeftFront.setVelocity(100, pct);
-    RightFront.setVelocity(100, pct);
-    LeftBack.setVelocity(100, pct);
-    RightBack.setVelocity(100, pct);
-    LeftFront.setMaxTorque(100, pct);
-    RightFront.setMaxTorque(100, pct);
-    LeftBack.setMaxTorque(100, pct);
-    RightBack.setMaxTorque(100, pct);
+    dihtrain.setvelocity(100, pct);
+    dihtrain.setMaxTorque(100, pct);
     chassis.control_arcade();
     // if (Controller.ButtonY.pressing())
     // {
@@ -231,6 +225,13 @@ void usercontrol(void) {
     //   double power = LiftPID.compute(error);
     //   Lift.spin(forward, power, percent);
     // }
+    if (controller.ButtonA.pressing()) {
+      Lift.spinFor(forward, 1, sec, 100, pct);
+      Lift.stop(hold);
+      dihtrain.spinFor(forward, 1, sec, 100, pct);
+      dihtrain.spinFor(reverse, 1, sec, 100, pct);
+      return;
+    }
     wait(7, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
   }
 }

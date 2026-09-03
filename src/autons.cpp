@@ -69,4 +69,10 @@ void odom_test(){
 void auton(){
    start_boundary_monitor();
    set_boundary(144, 0, 0, 144);
+
+   // TODO: replace this with your actual scoring routine.
+   // full_test() is just the existing shakedown movement (drive out, turn,
+   // come back) so autonomous does something instead of sitting still --
+   // it isn't tied to your game strategy at all.
+   full_test();
 }

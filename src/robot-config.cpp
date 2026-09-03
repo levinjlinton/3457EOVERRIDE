@@ -7,7 +7,7 @@ using code = vision::code;
 // A global instance of brain used for printing to the V5 Brain screen.
 brain  Brain;
 controller Controller = controller(primary);
-aivision AIVision(4, aivision::ALL_TAGS);
+aivision AIVision(6, aivision::ALL_TAGS);
 //The motor constructor takes motors as (port, ratio, reversed), so for example
 //motor LeftFront = motor(PORT1, ratio6_1, false);
 
@@ -16,8 +16,9 @@ motor LeftFront = motor(PORT1, ratio6_1, false);
 motor LeftBack = motor(PORT2, ratio6_1, false);
 motor RightFront = motor(PORT3, ratio6_1, true);
 motor RightBack = motor(PORT4, ratio6_1, true);
-motor LeftLift = motor(PORT19, ratio18_1, true);
-motor RightLift = motor(PORT20, ratio18_1, false);
+motor LeftLift = motor(PORT20, ratio18_1, false);
+motor RightLift = motor(PORT19, ratio18_1, true);
+motor_group dihtrain = motor_group(LeftFront, LeftBack, RightFront, RightBack);
 motor_group Lift = motor_group(LeftLift, RightLift);
 motor Claw = motor(PORT10, ratio18_1, false);//idk if it is actually false
 PID LiftPID = PID(0,1,0,0,0);
