@@ -175,7 +175,6 @@ void usercontrol(void) {
     RightFront.setMaxTorque(100, pct);
     LeftBack.setMaxTorque(100, pct);
     RightBack.setMaxTorque(100, pct);
-
     chassis.control_arcade();
     // if (Controller.ButtonY.pressing())
     // {
@@ -196,7 +195,7 @@ void usercontrol(void) {
     } else if (Controller.ButtonR2.pressing()){
       Lift.spin(forward, 100, pct);
     } else{
-      Lift.stop(brake);
+      Lift.stop(hold);
     }
     
     if (!ClawToggled){
@@ -232,7 +231,7 @@ void usercontrol(void) {
     //   double power = LiftPID.compute(error);
     //   Lift.spin(forward, power, percent);
     // }
-    wait(10, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
+    wait(7, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
   }
 }
 //
