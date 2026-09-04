@@ -132,8 +132,8 @@ void pre_auton() {
   Lift.setVelocity(100, pct);
   LeftFront.setStopping(coast);
   RightFront.setStopping(coast);
-  LeftBack.setStopping(hold);
-  RightBack.setStopping(hold);
+  LeftBack.setStopping(brake);
+  RightBack.setStopping(brake);
   dihtrain.setVelocity(100, pct);
   dihtrain.setMaxTorque(100, pct);
 }
@@ -234,7 +234,8 @@ void usercontrol(void) {
     }
 
     if (Controller.ButtonA.pressing()) {
-      Lift.spinFor(forward, 1, sec, 100, pct);
+      Lift.spin(forward, 100, pct);
+      wait(400, msec);
       Lift.stop(hold);
     }
     wait(7, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
