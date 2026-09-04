@@ -16,19 +16,17 @@ motor LeftFront = motor(PORT1, ratio6_1, false);
 motor LeftBack = motor(PORT2, ratio6_1, false);
 motor RightFront = motor(PORT3, ratio6_1, true);
 motor RightBack = motor(PORT4, ratio6_1, true);
-motor LeftLift = motor(PORT20, ratio18_1, true);
-motor RightLift = motor(PORT19, ratio18_1, false);
+motor LeftLift = motor(PORT10, ratio18_1, true);
+motor RightLift = motor(PORT11, ratio18_1, false);
 motor_group dihtrain = motor_group(LeftFront, LeftBack, RightFront, RightBack);
 motor_group Lift = motor_group(LeftLift, RightLift);
-motor Claw = motor(PORT10, ratio18_1, false);//idk if it is actually false
-PID LiftPID = PID(0,1,0,0.5,0);
+motor Claw = motor(PORT20, ratio18_1, false);//idk if it is actually false
+PID LiftPID = PID(0,0.5,0,0.25,0);
 double target = 0;
-rotation liftRot = rotation(PORT7);
+rotation liftRot = rotation(PORT9);
 bool usingLiftTarget = false;
 bool ClawToggled = true;
-double A = 180;
-double B = 360;
-double C = 630;
+
 
 void vexcodeInit( void ) {
   // nothing to initialize  

@@ -196,10 +196,20 @@ void usercontrol(void) {
     }
     if (Controller.ButtonR2.pressing()) {
         usingLiftTarget = false;
-        LeftLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-        RightLift.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+        LeftLift.spin(forward, 100, pct);
+        RightLift.spin(forward, 100, pct);
       } else {
-        if (!usingLiftTarget) {
+        if (!usingLiftTarget && !Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
+          LeftLift.stop(hold);
+          RightLift.stop(hold);
+        }
+      }
+    if (Controller.ButtonR1.pressing()) {
+        usingLiftTarget = false;
+        LeftLift.spin(reverse, 75, pct);
+        RightLift.spin(reverse, 75, pct);
+      } else {
+        if (!usingLiftTarget && !Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
           LeftLift.stop(hold);
           RightLift.stop(hold);
         }
@@ -208,12 +218,12 @@ void usercontrol(void) {
     // Set lift target.
     Controller.ButtonA.pressed([] {
       usingLiftTarget = true;
-      target = A;
+      target = target + 180;
     });
 
     Controller.ButtonB.pressed([] {
       usingLiftTarget = true;
-      target = B;
+      target = target - 180;
     });
 
     // Compute PID.
@@ -222,13 +232,11 @@ void usercontrol(void) {
       double power = LiftPID.compute(error);
       Lift.spin(forward, power, percent);
     }
-    // if (controller.ButtonA.pressing()) {
-    //   Lift.spinFor(forward, 1, sec, 100, pct);
-    //   Lift.stop(hold);
-    //   dihtrain.spinFor(forward, 1, sec, 100, pct);
-    //   dihtrain.spinFor(reverse, 1, sec, 100, pct);
-    //   return;
-    // }
+
+    if (Controller.ButtonA.pressing()) {
+      Lift.spinFor(forward, 1, sec, 100, pct);
+      Lift.stop(hold);
+    }
     wait(7, msec);// Sleep the task for a short, amount of time to prevent wasted resources.
   }
 }
